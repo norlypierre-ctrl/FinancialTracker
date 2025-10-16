@@ -216,11 +216,33 @@ public class FinancialTracker {
     }
 
 
-    private static void displayLedger() { /* TODO – print all transactions in column format */ }
+    private static void displayLedger() {
+
+        if (transactions.isEmpty()) {
+            System.out.println("Transactions Unavailable.");
+            return;
+        }
+
+        System.out.println("All Transactions (Newest First):");
+        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println("                                                   ");
+
+        for (int i = transactions.size() - 1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+            System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
+                    t.getDate().format(DATE_FMT),
+                    t.getTime().format(TIME_FMT),
+                    t.getDescription(),
+                    t.getVendor(),
+                    t.getAmount());
+        }
+    }
 
     private static void displayDeposits() { /* TODO – only amount > 0               */ }
 
-    private static void displayPayments() { /* TODO – only amount < 0               */ }
+    private static void displayPayments() { /* TODO – only amount <
+
+   0               */ }
 
 
     private static void reportsMenu(Scanner scanner) {
