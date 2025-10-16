@@ -238,14 +238,38 @@ public class FinancialTracker {
         }
     }
 
-    private static void displayDeposits() { /* TODO – only amount > 0               */ }
+    private static void displayDeposits() {
 
-    private static void displayPayments() { /* TODO – only amount <
+        boolean made = false;
+        System.out.println("Deposits (Newest First):");
+        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println("-----------------------------------------------------------------------");
 
-   0               */ }
+        for (int i = transactions.size() - 1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+            if (t.getAmount() > 0) {
+                System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
+                        t.getDate().format(DATE_FMT),
+                        t.getTime().format(TIME_FMT),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+                made = true;
+            }
+        }
+
+        if (!made) {
+            System.out.println("No Deposits Established.");
+        }
+    }
+
+    private static void displayPayments() {
+
+    }
 
 
     private static void reportsMenu(Scanner scanner) {
+
         boolean running = true;
         while (running) {
             System.out.println("Reports");
