@@ -1,6 +1,10 @@
 package com.pluralsight;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -61,7 +65,7 @@ public class FinancialTracker {
     public static void loadTransactions(String fileName) {
 
         File file = new File(fileName);
-        if (!file.exists()) return; // skip if file doesn't exist
+        if (!file.exists()) return;
 
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -87,6 +91,20 @@ public class FinancialTracker {
     }
 
     private static void saveTransactions(String fileName) {
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Transaction t : transactions) {
+                writer.write(String.format("%s|%s|%s|%s|%.2f",
+                        t.getDate().format(DATE_FMT),
+                        t.getTime().format(TIME_FMT),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount()));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error Saving File: " + e.getMessage());
+        }
     }
 
     private static void addDeposit(Scanner scanner) {
