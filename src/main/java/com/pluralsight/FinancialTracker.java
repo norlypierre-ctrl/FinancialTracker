@@ -316,13 +316,47 @@ public class FinancialTracker {
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
                 default -> System.out.println("Invalid Option");
-                }
             }
-
+        }
     }
+
+        private static void monthToDateReport() {
+            LocalDate now = LocalDate.now();
+            LocalDate start = now.withDayOfMonth(1);
+            filterTransactionsByDate(start, now);
+        }
+
+        private static void previousMonthReport() {
+            LocalDate now = LocalDate.now();
+            LocalDate start = now.minusMonths(1).withDayOfMonth(1);
+            LocalDate end = start.withDayOfMonth(start.lengthOfMonth());
+            filterTransactionsByDate(start, end);
+        }
+
+        private static void yearToDateReport() {
+            LocalDate now = LocalDate.now();
+            LocalDate start = now.withDayOfYear(1);
+            filterTransactionsByDate(start, now);
+        }
+
+        private static void previousYearReport() {
+            LocalDate now = LocalDate.now();
+            LocalDate start = now.minusYears(1).withDayOfYear(1);
+            LocalDate end = start.withDayOfYear(start.lengthOfYear());
+            filterTransactionsByDate(start, end);
+        }
+
+        private static void searchByVendor(Scanner scanner) {
+            System.out.print("Enter vendor name to search: ");
+            String vendor = scanner.nextLine().trim();
+            filterTransactionsByVendor(vendor);
+
+
+}
 
 
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
+
 
     }
 
