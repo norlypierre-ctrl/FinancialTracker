@@ -351,14 +351,33 @@ public class FinancialTracker {
             String vendor = scanner.nextLine().trim();
             filterTransactionsByVendor(vendor);
 
-
 }
 
 
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
 
+        System.out.printf("%nTransactions from %s to %s:%n", start, end);
+        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println("-----------------------------------------------------------------------");
 
+        boolean found = false;
+        for (int i = transactions.size() - 1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+            LocalDate date = t.getDate();
+
+            if ((date.isEqual(start) || date.isAfter(start)) && (date.isEqual(end) || date.isBefore(end))) {
+                System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
+                        date.format(DATE_FMT),
+                        t.getTime().format(TIME_FMT),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+                found = true;
+            }
+        }
+        if (!found) System.out.println("No Transactions Found for These Dates .");
     }
+
 
     private static void filterTransactionsByVendor(String vendor) {
 
