@@ -108,7 +108,46 @@ public class FinancialTracker {
     }
 
     private static void addDeposit(Scanner scanner) {
-        // TODO
+
+        try {
+
+            System.out.print("Enter Date (" + DATE_PATTERN + "): ");
+            LocalDate date = LocalDate.parse(scanner.nextLine().trim(), DATE_FMT);
+
+
+            System.out.print("Enter Time (" + TIME_PATTERN + "): ");
+            LocalTime time = LocalTime.parse(scanner.nextLine().trim(), TIME_FMT);
+
+
+            System.out.print("Enter Description: ");
+            String description = scanner.nextLine().trim();
+
+
+            System.out.print("Enter Vendor: ");
+            String vendor = scanner.nextLine().trim();
+
+
+            System.out.print("Enter Amount: ");
+            double amount = Double.parseDouble(scanner.nextLine().trim());
+
+            if (amount <= 0) {
+                System.out.println("Deposit Must be Positive.");
+                return;
+            }
+
+            Transaction t = new Transaction(date, time, description, vendor, amount);
+            transactions.add(t);
+            System.out.println("Deposited Successfully:");
+            System.out.println(t);
+
+        } catch (DateTimeException e) {
+            System.out.println("Invalid Date or Time Format. Please Try Again.");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid Amount. Please Enter a Number.");
+        } catch (Exception e) {
+            System.out.println("Error Depositing: " + e.getMessage());
+        }
+    }
     }
 
 
