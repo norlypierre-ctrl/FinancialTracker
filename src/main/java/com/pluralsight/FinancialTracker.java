@@ -347,7 +347,7 @@ public class FinancialTracker {
         }
 
         private static void searchByVendor(Scanner scanner) {
-            System.out.print("Enter vendor name to search: ");
+            System.out.print("Enter Vendor Name to Search: ");
             String vendor = scanner.nextLine().trim();
             filterTransactionsByVendor(vendor);
 
@@ -379,10 +379,28 @@ public class FinancialTracker {
     }
 
 
-    private static void filterTransactionsByVendor(String vendor) {
+    private static void filterTransactionsByVendor(String vendor) {    System.out.printf("%nTransactions for vendor: %s%n", vendor);
 
+        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println("-----------------------------------------------------------------------");
 
+        boolean found = false;
+        for (int i = transactions.size() - 1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+            if (t.getVendor().equalsIgnoreCase(vendor)) {
+                System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
+                        t.getDate().format(DATE_FMT),
+                        t.getTime().format(TIME_FMT),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+                found = true;
+
+            }
+        }
+        if (!found) System.out.println("No Transactions Found From Vendor: " + vendor);
     }
+
 
     private static void customSearch(Scanner scanner) {
 
