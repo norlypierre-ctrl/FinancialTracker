@@ -307,16 +307,18 @@ public class FinancialTracker {
             String input = scanner.nextLine().trim();
 
             switch (input) {
-                case "1" -> {/* TODO – month-to-date report */ }
-                case "2" -> {/* TODO – previous month report */ }
-                case "3" -> {/* TODO – year-to-date report   */ }
-                case "4" -> {/* TODO – previous year report  */ }
-                case "5" -> {/* TODO – prompt for vendor then report */ }
+
+                case "1" -> monthToDateReport();
+                case "2" -> previousMonthReport();
+                case "3" -> yearToDateReport();
+                case "4" -> previousYearReport();
+                case "5" -> searchByVendor(scanner);
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
-                default -> System.out.println("Invalid option");
+                default -> System.out.println("Invalid Option");
+                }
             }
-        }
+
     }
 
 
