@@ -3,7 +3,6 @@ package com.pluralsight;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -58,8 +57,6 @@ public class FinancialTracker {
         saveTransactions(FILE_NAME);
         scanner.close();
     }
-
-
 
 
     public static void loadTransactions(String fileName) {
@@ -148,12 +145,50 @@ public class FinancialTracker {
             System.out.println("Error Depositing: " + e.getMessage());
         }
     }
-    }
-
 
     private static void addPayment(Scanner scanner) {
-        // TODO
-    }
+
+            try {
+
+                System.out.print("Enter Date (" + DATE_PATTERN + "): ");
+                LocalDate date = LocalDate.parse(scanner.nextLine().trim(), DATE_FMT);
+
+
+                System.out.print("Enter Time (" + TIME_PATTERN + "): ");
+                LocalTime time = LocalTime.parse(scanner.nextLine().trim(), TIME_FMT);
+
+
+                System.out.print("Enter Description: ");
+                String description = scanner.nextLine().trim();
+
+
+                System.out.print("Enter Vendor: ");
+                String vendor = scanner.nextLine().trim();
+
+
+                System.out.print("Enter Amount: ");
+                double amount = Double.parseDouble(scanner.nextLine().trim());
+
+                if (amount <= 0) {
+                    System.out.println("Deposit Must be Positive.");
+                    return;
+                }
+
+                amount = -amount;
+
+                Transaction t = new Transaction(date, time, description, vendor, amount);
+                transactions.add(t);
+                System.out.println("Payment Successful:");
+                System.out.println(t);
+
+            } catch (DateTimeException e) {
+                System.out.println("Invalid Date or Time Format. Please Try Again.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid Amount. Please Enter a Number.");
+            } catch (Exception e) {
+                System.out.println("Error Adding Payment: " + e.getMessage());
+            }
+        }
 
 
     private static void ledgerMenu(Scanner scanner) {
