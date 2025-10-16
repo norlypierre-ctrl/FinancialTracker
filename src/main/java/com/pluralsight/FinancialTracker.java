@@ -225,7 +225,7 @@ public class FinancialTracker {
 
         System.out.println("All Transactions (Newest First):");
         System.out.println("Date | Time | Description | Vendor | Amount");
-        System.out.println("                                                   ");
+        System.out.println("-----------------------------------------------------------------------");
 
         for (int i = transactions.size() - 1; i >= 0; i--) {
             Transaction t = transactions.get(i);
@@ -265,7 +265,29 @@ public class FinancialTracker {
 
     private static void displayPayments() {
 
+        boolean made = false;
+        System.out.println("Payments (Newest First):");
+        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println("-----------------------------------------------------------------------");
+
+        for (int i = transactions.size() - 1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+            if (t.getAmount() < 0) {
+                System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
+                        t.getDate().format(DATE_FMT),
+                        t.getTime().format(TIME_FMT),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+                made = true;
+            }
+        }
+
+        if (!made) {
+            System.out.println("No Payments Made.");
+        }
     }
+
 
 
     private static void reportsMenu(Scanner scanner) {
