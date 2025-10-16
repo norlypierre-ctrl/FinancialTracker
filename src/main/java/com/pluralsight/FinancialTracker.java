@@ -381,6 +381,7 @@ public class FinancialTracker {
 
     private static void filterTransactionsByVendor(String vendor) {
 
+
     }
 
     private static void customSearch(Scanner scanner) {
