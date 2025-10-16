@@ -3,6 +3,7 @@ package com.pluralsight;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -49,15 +50,44 @@ public class FinancialTracker {
                 default -> System.out.println("Invalid option");
             }
         }
+
+        saveTransactions(FILE_NAME);
         scanner.close();
     }
 
 
 
+
     public static void loadTransactions(String fileName) {
 
+        File file = new File(fileName);
+        if (!file.exists()) return; // skip if file doesn't exist
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length != 5) continue;
+
+                try {
+                    LocalDate date = LocalDate.parse(parts[0].trim(), DATE_FMT);
+                    LocalTime time = LocalTime.parse(parts[1].trim(), TIME_FMT);
+                    String description = parts[2].trim();
+                    String vendor = parts[3].trim();
+                    double amount = Double.parseDouble(parts[4].trim());
+
+                    transactions.add(new Transaction(date, time, description, vendor, amount));
+                } catch (DateTimeException |NumberFormatException e) {
+                    System.out.println("Invalid Transaction: " + line + " ["+ e.getMessage() + "]");
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error Reading File: " + e.getMessage());
+        }
     }
 
+    private static void saveTransactions(String fileName) {
+    }
 
     private static void addDeposit(Scanner scanner) {
         // TODO
