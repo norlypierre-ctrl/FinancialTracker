@@ -60,6 +60,13 @@ Include screenshots or GIFs that show your application in action. Use tools like
 
 ![Application Screenshot](path/to/your/screenshot.png)
 
+![ezgif-5be766ebda82f3](https://github.com/user-attachments/assets/67b813ca-5e0f-48b0-8fb8-96f39380cda4)
+![ezgif-5c2a1360163977](https://github.com/user-attachments/assets/5f9106e8-7afc-4133-aa6b-7d5eaf995dd0)
+![ezgif-549a09efc21135](https://github.com/user-attachments/assets/52f9556d-ea8f-431d-b270-c9b643f0fdcc)
+![ezgif-52d97f2abb70a2](https://github.com/user-attachments/assets/2b298249-114d-4e32-b46d-921f5748c813)
+![ezgif-591a15110921b1](https://github.com/user-attachments/assets/2bae7846-a310-4fd0-baf5-c20676946317)
+![ezgif-585b0167ed2815](https://github.com/user-attachments/assets/aea18ea9-2392-4607-acee-fff8714deb87)
+
 ## Future Work
 
 Outline potential future enhancements or functionalities you might consider adding:
