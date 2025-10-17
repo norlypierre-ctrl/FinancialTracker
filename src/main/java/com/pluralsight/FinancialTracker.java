@@ -387,7 +387,7 @@ public class FinancialTracker {
         boolean found = false;
         for (int i = transactions.size() - 1; i >= 0; i--) {
             Transaction t = transactions.get(i);
-            if (t.getVendor().equalsIgnoreCase(vendor)) {
+            if (t.getVendor().toLowerCase().contains(vendor.toLowerCase())) {
                 System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
                         t.getDate().format(DATE_FMT),
                         t.getTime().format(TIME_FMT),
