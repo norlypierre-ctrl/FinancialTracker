@@ -170,7 +170,7 @@ public class FinancialTracker {
             double amount = Double.parseDouble(scanner.nextLine().trim());
 
             if (amount <= 0) {
-                System.out.println("Deposit Must be Positive.");
+                System.out.println("payment Must be Positive.");
                 return;
             }
 
@@ -487,7 +487,7 @@ public class FinancialTracker {
         try {
             return LocalDate.parse(input, DATE_FMT);
         } catch (DateTimeException e) {
-            System.out.println("Invalid Date Format: ");
+            System.out.println("Invalid Date Format: " + input);
 
             return null;
         }
