@@ -481,14 +481,26 @@ public class FinancialTracker {
     }
 
 
-    private static LocalDate parseDate(String s) {
+    private static LocalDate parseDate(String input) {
 
-        return null;
+        if (input.isEmpty()) return null;
+        try {
+            return LocalDate.parse(input, DATE_FMT);
+        } catch (DateTimeException e) {
+            System.out.println("Invalid Date Format: ");
+
+            return null;
+        }
     }
 
-    private static Double parseDouble(String s) {
+    private static Double parseDouble(String input) {
 
-        return null;
-
+        if (input.isEmpty()) return null;
+        try {
+            return Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number: " + input);
+            return null;
+        }
     }
 }
