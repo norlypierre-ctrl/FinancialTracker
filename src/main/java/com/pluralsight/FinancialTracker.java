@@ -28,6 +28,19 @@ public class FinancialTracker {
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern(TIME_PATTERN);
     private static final DateTimeFormatter DATETIME_FMT = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
 
+    /* ------------------------------------------------------------------
+        text colors
+       ------------------------------------------------------------------ */
+    private static final String RESET = "\u001B[0m";
+    private static final String RED = "\u001B[31m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String YELLOW = "\u001B[93m";
+    private static final String BLUE = "\u001B[34m";
+    private static final String BLUE2 = "\u001B[94m";
+
+    /* ------------------------------------------------------------------
+       Main menu
+       ------------------------------------------------------------------ */
 
     public static void main(String[] args) {
         loadTransactions(FILE_NAME);
@@ -36,7 +49,7 @@ public class FinancialTracker {
         boolean running = true;
 
         while (running) {
-            System.out.println("Welcome to TransactionApp");
+            System.out.println(BLUE2 + "\nWelcome to TransactionApp\n" + RESET);
             System.out.println("Choose an option:");
             System.out.println("D) Add Deposit");
             System.out.println("P) Make Payment (Debit)");
