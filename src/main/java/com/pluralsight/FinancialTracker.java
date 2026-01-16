@@ -43,7 +43,7 @@ public class FinancialTracker {
     private static final String BLUE2 = "\u001B[94m";
 
     private static final String ICON_MEMO = "\uD83D\uDCDD"; //📝
-    private static final String ICON_Payment = "\uD83D\uDCB5"; //📝
+    private static final String ICON_Payment = "\uD83D\uDED2"; //🧾
     private static final String ICON_Deposit = "\uD83D\uDCB5"; //💵
 /*
     /* ------------------------------------------------------------------
@@ -51,10 +51,7 @@ public class FinancialTracker {
        ------------------------------------------------------------------ */
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                createAndShowGUI();
+
 
         loadTransactions(FILE_NAME);
 
@@ -65,9 +62,9 @@ public class FinancialTracker {
             System.out.println(BLUE2 + "\nWelcome to TransactionApp\n" + RESET);
             System.out.println(BLUE2 + "==== Home Screen ====" + RESET);
             System.out.println(BLUE + "Choose an option:" + RESET);
-            System.out.println(GREEN + "D) Add Deposit" + RESET);
-            System.out.println(GREEN + "P) Make Payment (Debit)" + RESET);
-            System.out.println(GREEN + "L) Ledger" + RESET);
+            System.out.println(GREEN + "D) Add Deposit" + ICON_Deposit + RESET);
+            System.out.println(GREEN + "P) Make Payment (Debit)"+ ICON_Payment + RESET);
+            System.out.println(GREEN + "L) Ledger"+ ICON_MEMO + RESET);
             System.out.println(RED + "X) Exit" + RESET);
 
             String input = scanner.nextLine().trim();
@@ -225,7 +222,6 @@ public class FinancialTracker {
             System.out.println(BLUE + "Choose an option:" + RESET);
             System.out.println(GREEN + "A) All" + RESET);
             System.out.println(GREEN + "D) Deposits" + RESET);
-            System.out.println(RED + "No Deposits Established." + RESET);
             System.out.println(GREEN + "P) Payments" + RESET);
             System.out.println(GREEN + "R) Reports" + RESET);
             System.out.println(YELLOW + "H) Home" );
@@ -499,19 +495,4 @@ public class FinancialTracker {
             return null;
         }
     }
-            private static void createAndShowGUI() {
-                // Create the main application window
-                JFrame frame = new JFrame("Personal Financial Tracker");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close operation
-                frame.setSize(800, 600); // Set window size
-                frame.setLocationRelativeTo(null); // Center the window on the screen
-
-                TitleScreen titleScreen = new TitleScreen(frame);
-                frame.add(titleScreen);
-
-                frame.setVisible(true);
-            }
-        }
-    }
 }
-
