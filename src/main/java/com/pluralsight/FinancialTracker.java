@@ -70,7 +70,7 @@ public class FinancialTracker {
                 case "P" -> addPayment(scanner);
                 case "L" -> ledgerMenu(scanner);
                 case "X" -> running = false;
-                default -> System.out.println("Invalid option");
+                default -> System.out.println(RED + "Invalid option" + RESET);
             }
         }
 
@@ -148,7 +148,7 @@ public class FinancialTracker {
             double amount = Double.parseDouble(scanner.nextLine().trim());
 
             if (amount <= 0) {
-                System.out.println(BLUE2 + "Deposit Must be Positive." + RESET);
+                System.out.println(YELLOW + "Deposit Must be Positive." + RESET);
                 return;
             }
 
@@ -170,27 +170,27 @@ public class FinancialTracker {
 
         try {
 
-            System.out.print("Enter Date (" + DATE_PATTERN + "): ");
+            System.out.print(BLUE2 + "Enter Date (" + DATE_PATTERN + "): " + RESET);
             LocalDate date = LocalDate.parse(scanner.nextLine().trim(), DATE_FMT);
 
 
-            System.out.print("Enter Time (" + TIME_PATTERN + "): ");
+            System.out.print(BLUE2 + "Enter Time (" + TIME_PATTERN + "): " + RESET);
             LocalTime time = LocalTime.parse(scanner.nextLine().trim(), TIME_FMT);
 
 
-            System.out.print("Enter Description: ");
+            System.out.print(BLUE + "Enter Description: " + RESET);
             String description = scanner.nextLine().trim();
 
 
-            System.out.print("Enter Vendor: ");
+            System.out.print(GREEN + "Enter Vendor: " + RESET);
             String vendor = scanner.nextLine().trim();
 
 
-            System.out.print("Enter Amount: ");
+            System.out.print(GREEN + "Enter Amount: " + RESET);
             double amount = Double.parseDouble(scanner.nextLine().trim());
 
             if (amount <= 0) {
-                System.out.println("payment Must be Positive.");
+                System.out.println(YELLOW + "Payment MUST be Positive." + RESET);
                 return;
             }
 
@@ -198,15 +198,15 @@ public class FinancialTracker {
 
             Transaction t = new Transaction(date, time, description, vendor, amount);
             transactions.add(t);
-            System.out.println("Payment Successful:");
+            System.out.println(YELLOW + "Payment Successful:" + RESET);
             System.out.println(t);
 
         } catch (DateTimeException e) {
-            System.out.println("Invalid Date or Time Format. Please Try Again.");
+            System.out.println(BLUE2 + "Invalid Date or Time Format. Please Try Again." + RESET);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid Amount. Please Enter a Number.");
+            System.out.println(BLUE + "Invalid Amount. Please Enter a Number." + RESET);
         } catch (Exception e) {
-            System.out.println("Error Adding Payment: " + e.getMessage());
+            System.out.println(RED + "Error Adding Payment: " + e.getMessage() + RESET);
         }
     }
 
@@ -214,13 +214,14 @@ public class FinancialTracker {
     private static void ledgerMenu(Scanner scanner) {
         boolean running = true;
         while (running) {
-            System.out.println("Ledger");
-            System.out.println("Choose an option:");
-            System.out.println("A) All");
-            System.out.println("D) Deposits");
-            System.out.println("P) Payments");
-            System.out.println("R) Reports");
-            System.out.println("H) Home");
+            System.out.println(BLUE2 + "Ledger" + RESET);
+            System.out.println(BLUE + "Choose an option:" + RESET);
+            System.out.println(GREEN + "A) All" + RESET);
+            System.out.println(GREEN + "D) Deposits" + RESET);
+            System.out.println(RED + "No Deposits Established." + RESET);
+            System.out.println(GREEN + "P) Payments" + RESET);
+            System.out.println(GREEN + "R) Reports" + RESET);
+            System.out.println(YELLOW + "H) Home" );
 
             String input = scanner.nextLine().trim();
 
@@ -230,7 +231,7 @@ public class FinancialTracker {
                 case "P" -> displayPayments();
                 case "R" -> reportsMenu(scanner);
                 case "H" -> running = false;
-                default -> System.out.println("Invalid option");
+                default -> System.out.println(BLUE2 + "Invalid option" + RESET);
             }
         }
     }
@@ -239,12 +240,13 @@ public class FinancialTracker {
     private static void displayLedger() {
 
         if (transactions.isEmpty()) {
-            System.out.println("Transactions Unavailable.");
+            System.out.println(RED + "Transactions Unavailable." + RESET);
             return;
         }
 
         System.out.println("All Transactions (Newest First):");
-        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println(String.format("%s|%s|%-22s|%-12s| $%8s", "Date", "Time",
+                "Description", "Vendor", "Amount"));
         System.out.println("-----------------------------------------------------------------------");
 
         for (Transaction transaction : transactions) {
@@ -254,34 +256,31 @@ public class FinancialTracker {
 
     private static void displayDeposits() {
 
-        boolean made = false;
+
         System.out.println("Deposits (Newest First):");
-        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println(String.format("%s|%s|%-22s|%-12s| $%8s", "Date", "Time",
+                "Description", "Vendor", "Amount"));
         System.out.println("-----------------------------------------------------------------------");
 
-        for (int i = transactions.size() - 1; i >= 0; i--) {
-            Transaction t = transactions.get(i);
-            if (t.getAmount() > 0) {
-                System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
-                        t.getDate().format(DATE_FMT),
-                        t.getTime().format(TIME_FMT),
-                        t.getDescription(),
-                        t.getVendor(),
-                        t.getAmount());
-                made = true;
+        try{
+            for (Transaction transaction : transactions) {
+                double amount = transaction.getAmount();
+                if (amount > 0) {
+                    System.out.println(transaction);
+                }
             }
-        }
-
-        if (!made) {
+        } catch (Exception e) {
             System.out.println("No Deposits Established.");
         }
+
     }
 
     private static void displayPayments() {
 
         boolean made = false;
         System.out.println("Payments (Newest First):");
-        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println(String.format("%s|%s|%-22s|%-12s| $%8s", "Date", "Time",
+                "Description", "Vendor", "Amount"));
         System.out.println("-----------------------------------------------------------------------");
 
         for (int i = transactions.size() - 1; i >= 0; i--) {
