@@ -1,5 +1,6 @@
 package com.pluralsight;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -37,12 +38,17 @@ public class FinancialTracker {
     private static final String YELLOW = "\u001B[93m";
     private static final String BLUE = "\u001B[34m";
     private static final String BLUE2 = "\u001B[94m";
-
+/*
     /* ------------------------------------------------------------------
        Main menu
        ------------------------------------------------------------------ */
 
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                createAndShowGUI();
+
         loadTransactions(FILE_NAME);
 
         Scanner scanner = new Scanner(System.in);
@@ -50,11 +56,12 @@ public class FinancialTracker {
 
         while (running) {
             System.out.println(BLUE2 + "\nWelcome to TransactionApp\n" + RESET);
-            System.out.println("Choose an option:");
-            System.out.println("D) Add Deposit");
-            System.out.println("P) Make Payment (Debit)");
-            System.out.println("L) Ledger");
-            System.out.println("X) Exit");
+            System.out.println(BLUE2 + "==== Home Screen ====" + RESET);
+            System.out.println(BLUE + "Choose an option:" + RESET);
+            System.out.println(GREEN + "D) Add Deposit" + RESET);
+            System.out.println(GREEN + "P) Make Payment (Debit)" + RESET);
+            System.out.println(GREEN + "L) Ledger" + RESET);
+            System.out.println(RED + "X) Exit" + RESET);
 
             String input = scanner.nextLine().trim();
 
@@ -92,11 +99,11 @@ public class FinancialTracker {
 
                     transactions.add(new Transaction(date, time, description, vendor, amount));
                 } catch (DateTimeException | NumberFormatException e) {
-                    System.out.println("Invalid Transaction: " + line + " [" + e.getMessage() + "]");
+                    System.out.println(BLUE2 + "Invalid Transaction: " + line + " [" + e.getMessage() + "]" + RESET);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error Reading File: " + e.getMessage());
+            System.out.println(RED + "Error Reading File: " + e.getMessage() + RESET);
         }
     }
 
@@ -113,7 +120,7 @@ public class FinancialTracker {
                 writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error Saving File: " + e.getMessage());
+            System.out.println(RED + "Error Saving File: " + e.getMessage() + RESET);
         }
     }
 
@@ -121,41 +128,41 @@ public class FinancialTracker {
 
         try {
 
-            System.out.print("Enter Date (" + DATE_PATTERN + "): ");
+            System.out.print(BLUE2 + "Enter Date (" + DATE_PATTERN + "): " + RESET);
             LocalDate date = LocalDate.parse(scanner.nextLine().trim(), DATE_FMT);
 
 
-            System.out.print("Enter Time (" + TIME_PATTERN + "): ");
+            System.out.print(BLUE2 + "Enter Time (" + TIME_PATTERN + "): " + RESET);
             LocalTime time = LocalTime.parse(scanner.nextLine().trim(), TIME_FMT);
 
 
-            System.out.print("Enter Description: ");
+            System.out.print(BLUE + "Enter Description: " + RESET);
             String description = scanner.nextLine().trim();
 
 
-            System.out.print("Enter Vendor: ");
+            System.out.print(GREEN + "Enter Vendor: " + RESET);
             String vendor = scanner.nextLine().trim();
 
 
-            System.out.print("Enter Amount: ");
+            System.out.print(GREEN + "Enter Amount: " + RESET);
             double amount = Double.parseDouble(scanner.nextLine().trim());
 
             if (amount <= 0) {
-                System.out.println("Deposit Must be Positive.");
+                System.out.println(BLUE2 + "Deposit Must be Positive." + RESET);
                 return;
             }
 
             Transaction t = new Transaction(date, time, description, vendor, amount);
             transactions.add(t);
-            System.out.println("Deposited Successfully:");
+            System.out.println(YELLOW + "Deposited Successfully:" + RESET);
             System.out.println(t);
 
         } catch (DateTimeException e) {
-            System.out.println("Invalid Date or Time Format. Please Try Again.");
+            System.out.println(RED + "Invalid Date or Time Format. Please Try Again." + RESET);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid Amount. Please Enter a Number.");
+            System.out.println(RED + "Invalid Amount. Please Enter a Number." + RESET);
         } catch (Exception e) {
-            System.out.println("Error Depositing: " + e.getMessage());
+            System.out.println(RED + "Error Depositing: " + e.getMessage() + RESET);
         }
     }
 
@@ -240,14 +247,8 @@ public class FinancialTracker {
         System.out.println("Date | Time | Description | Vendor | Amount");
         System.out.println("-----------------------------------------------------------------------");
 
-        for (int i = transactions.size() - 1; i >= 0; i--) {
-            Transaction t = transactions.get(i);
-            System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
-                    t.getDate().format(DATE_FMT),
-                    t.getTime().format(TIME_FMT),
-                    t.getDescription(),
-                    t.getVendor(),
-                    t.getAmount());
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction);
         }
     }
 
@@ -387,7 +388,7 @@ public class FinancialTracker {
                 found = true;
             }
         }
-        if (!found) System.out.println("No Transactions Found for These Dates .");
+        if (!found) System.out.println("No Transactions Found for These Dates.");
     }
 
 
@@ -425,7 +426,7 @@ public class FinancialTracker {
             try {
                 startDate = LocalDate.parse(startInput, DATE_FMT);
             } catch (Exception e) {
-                System.out.println("Invalid format for Start Date.");
+                System.out.println("Invalid Format for Start Date.");
                 startDate = null;
             }
         }
@@ -516,4 +517,19 @@ public class FinancialTracker {
             return null;
         }
     }
+            private static void createAndShowGUI() {
+                // Create the main application window
+                JFrame frame = new JFrame("Personal Financial Tracker");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close operation
+                frame.setSize(800, 600); // Set window size
+                frame.setLocationRelativeTo(null); // Center the window on the screen
+
+                TitleScreen titleScreen = new TitleScreen(frame);
+                frame.add(titleScreen);
+
+                frame.setVisible(true);
+            }
+        }
+    }
 }
+
