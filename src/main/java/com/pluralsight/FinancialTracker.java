@@ -29,8 +29,11 @@ public class FinancialTracker {
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern(TIME_PATTERN);
     private static final DateTimeFormatter DATETIME_FMT = DateTimeFormatter.ofPattern(DATETIME_PATTERN);
 
+    private static final String TableHeader = String.format("%s|%s|%-22s|%-12s| $%8s", "Date", "Time",
+            "Description", "Vendor", "Amount");
+
     /* ------------------------------------------------------------------
-        text colors
+        text colors & Icon
        ------------------------------------------------------------------ */
     private static final String RESET = "\u001B[0m";
     private static final String RED = "\u001B[31m";
@@ -38,6 +41,10 @@ public class FinancialTracker {
     private static final String YELLOW = "\u001B[93m";
     private static final String BLUE = "\u001B[34m";
     private static final String BLUE2 = "\u001B[94m";
+
+    private static final String ICON_MEMO = "\uD83D\uDCDD"; //📝
+    private static final String ICON_Payment = "\uD83D\uDCB5"; //📝
+    private static final String ICON_Deposit = "\uD83D\uDCB5"; //💵
 /*
     /* ------------------------------------------------------------------
        Main menu
@@ -244,9 +251,8 @@ public class FinancialTracker {
             return;
         }
 
-        System.out.println("All Transactions (Newest First):");
-        System.out.println(String.format("%s|%s|%-22s|%-12s| $%8s", "Date", "Time",
-                "Description", "Vendor", "Amount"));
+        System.out.println(BLUE2 + "All Transactions (Newest First):" + RESET);
+        System.out.println(BLUE + TableHeader + RESET);
         System.out.println("-----------------------------------------------------------------------");
 
         for (Transaction transaction : transactions) {
@@ -257,9 +263,8 @@ public class FinancialTracker {
     private static void displayDeposits() {
 
 
-        System.out.println("Deposits (Newest First):");
-        System.out.println(String.format("%s|%s|%-22s|%-12s| $%8s", "Date", "Time",
-                "Description", "Vendor", "Amount"));
+        System.out.println(BLUE2 + "Deposits (Newest First):" + RESET);
+        System.out.println(BLUE + TableHeader + RESET);
         System.out.println("-----------------------------------------------------------------------");
 
         try{
@@ -270,34 +275,27 @@ public class FinancialTracker {
                 }
             }
         } catch (Exception e) {
-            System.out.println("No Deposits Established.");
+            System.out.println(RED + "No Deposits Established." + RESET);
         }
 
     }
 
     private static void displayPayments() {
 
-        boolean made = false;
-        System.out.println("Payments (Newest First):");
-        System.out.println(String.format("%s|%s|%-22s|%-12s| $%8s", "Date", "Time",
-                "Description", "Vendor", "Amount"));
+        System.out.println(BLUE2 + "Payments (Newest First):" + RESET);
+        System.out.println(BLUE + TableHeader + RESET);
         System.out.println("-----------------------------------------------------------------------");
 
-        for (int i = transactions.size() - 1; i >= 0; i--) {
-            Transaction t = transactions.get(i);
-            if (t.getAmount() < 0) {
-                System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
-                        t.getDate().format(DATE_FMT),
-                        t.getTime().format(TIME_FMT),
-                        t.getDescription(),
-                        t.getVendor(),
-                        t.getAmount());
-                made = true;
-            }
-        }
+        try {
+            for (Transaction transaction : transactions) {
+                double amount = transaction.getAmount();
+                if (amount < 0) {
 
-        if (!made) {
-            System.out.println("No Payments Made.");
+                    System.out.println(transaction);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(RED + "No Payments Made." + RESET);
         }
     }
 
@@ -306,15 +304,15 @@ public class FinancialTracker {
 
         boolean running = true;
         while (running) {
-            System.out.println("Reports");
-            System.out.println("Choose an option:");
-            System.out.println("1) Month To Date");
-            System.out.println("2) Previous Month");
-            System.out.println("3) Year To Date");
-            System.out.println("4) Previous Year");
-            System.out.println("5) Search by Vendor");
-            System.out.println("6) Custom Search");
-            System.out.println("0) Back");
+            System.out.println(BLUE2 + "Reports" + RESET);
+            System.out.println(BLUE + "Choose an option:" + RESET);
+            System.out.println(GREEN + "1) Month To Date" + RESET);
+            System.out.println(GREEN + "2) Previous Month" + RESET);
+            System.out.println(GREEN + "3) Year To Date" + RESET);
+            System.out.println(GREEN + "4) Previous Year" + RESET);
+            System.out.println(YELLOW + "5) Search by Vendor" + RESET);
+            System.out.println(YELLOW + "6) Custom Search" + RESET);
+            System.out.println(YELLOW + "0) Back" + RESET);
 
             String input = scanner.nextLine().trim();
 
@@ -327,7 +325,7 @@ public class FinancialTracker {
                 case "5" -> searchByVendor(scanner);
                 case "6" -> customSearch(scanner);
                 case "0" -> running = false;
-                default -> System.out.println("Invalid Option");
+                default -> System.out.println(RED + "Invalid Option" + RESET);
             }
         }
     }
@@ -359,7 +357,7 @@ public class FinancialTracker {
     }
 
     private static void searchByVendor(Scanner scanner) {
-        System.out.print("Enter Vendor Name to Search: ");
+        System.out.print(BLUE2 + "Enter Vendor Name to Search: " + RESET);
         String vendor = scanner.nextLine().trim();
         filterTransactionsByVendor(vendor);
 
@@ -369,7 +367,7 @@ public class FinancialTracker {
     private static void filterTransactionsByDate(LocalDate start, LocalDate end) {
 
         System.out.printf("%nTransactions from %s to %s:%n", start, end);
-        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println(TableHeader);
         System.out.println("-----------------------------------------------------------------------");
 
         boolean found = false;
@@ -378,93 +376,83 @@ public class FinancialTracker {
             LocalDate date = t.getDate();
 
             if ((date.isEqual(start) || date.isAfter(start)) && (date.isEqual(end) || date.isBefore(end))) {
-                System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
-                        date.format(DATE_FMT),
-                        t.getTime().format(TIME_FMT),
-                        t.getDescription(),
-                        t.getVendor(),
-                        t.getAmount());
+                System.out.println(t);
                 found = true;
             }
         }
-        if (!found) System.out.println("No Transactions Found for These Dates.");
+        if (!found) System.out.println(RED + "No Transactions Found for These Dates." + RESET);
     }
 
 
     private static void filterTransactionsByVendor(String vendor) {
         System.out.printf("%nTransactions for vendor: %s%n", vendor);
 
-        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println(BLUE2 + TableHeader + RESET);
         System.out.println("-----------------------------------------------------------------------");
 
         boolean found = false;
         for (int i = transactions.size() - 1; i >= 0; i--) {
             Transaction t = transactions.get(i);
             if (t.getVendor().toLowerCase().contains(vendor.toLowerCase())) {
-                System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
-                        t.getDate().format(DATE_FMT),
-                        t.getTime().format(TIME_FMT),
-                        t.getDescription(),
-                        t.getVendor(),
-                        t.getAmount());
+                System.out.println(t);
                 found = true;
 
             }
         }
-        if (!found) System.out.println("No Transactions Found From Vendor: " + vendor);
+        if (!found) System.out.println(RED + "No Transactions Found From Vendor: " + vendor + RESET);
     }
 
 
     private static void customSearch(Scanner scanner) {
 
 
-        System.out.print("Start Date [yyyy-MM-dd]: ");
+        System.out.print(BLUE2 + "Start Date [yyyy-MM-dd]: " + RESET);
         String startInput = scanner.nextLine().trim();
         LocalDate startDate = null;
         if (!startInput.isEmpty()) {
             try {
                 startDate = LocalDate.parse(startInput, DATE_FMT);
             } catch (Exception e) {
-                System.out.println("Invalid Format for Start Date.");
+                System.out.println(RED + "Invalid Format for Start Date." + RESET);
                 startDate = null;
             }
         }
 
-        System.out.print("End Date [yyyy-MM-dd]: ");
+        System.out.print(BLUE2 + "End Date [yyyy-MM-dd]: " + RESET);
         String endInput = scanner.nextLine().trim();
         LocalDate endDate = null;
         if (!endInput.isEmpty()) {
             try {
                 endDate = LocalDate.parse(endInput, DATE_FMT);
             } catch (Exception e) {
-                System.out.println("Invalid Format for End Date.");
+                System.out.println(RED + "Invalid Format for End Date." + RESET);
                 endDate = null;
             }
         }
 
-        System.out.print("Description: ");
+        System.out.print(GREEN + "Description: " + RESET);
         String description = scanner.nextLine().trim();
         if (description.isEmpty()) description = null;
 
-        System.out.print("Vendor: ");
+        System.out.print(GREEN + "Vendor: " + RESET);
         String vendor = scanner.nextLine().trim();
         if (vendor.isEmpty()) vendor = null;
 
-        System.out.print("Amount: ");
+        System.out.print(GREEN + "Amount: " + RESET);
         String amountInput = scanner.nextLine().trim();
         Double amount = null;
         if (!amountInput.isEmpty()) {
             try {
                 amount = Double.parseDouble(amountInput);
             } catch (Exception e) {
-                System.out.println("Invalid Amount.");
+                System.out.println(RED + "Invalid Amount." + RESET);
                 amount = null;
             }
         }
 
 
-        System.out.println("\nMatching Transactions:");
-        System.out.println("Date | Time | Description | Vendor | Amount");
+        System.out.println(BLUE2 + "\nMatching Transactions:" + RESET);
+        System.out.println(BLUE + TableHeader + RESET);
         System.out.println("-----------------------------------------------------------------------");
 
         boolean match = false;
@@ -481,12 +469,7 @@ public class FinancialTracker {
                 continue;
             }
 
-            System.out.printf("%s | %s | %-22s | %-12s | %8.2f%n",
-                    t.getDate().format(DATE_FMT),
-                    t.getTime().format(TIME_FMT),
-                    t.getDescription(),
-                    t.getVendor(),
-                    t.getAmount());
+            System.out.println(t);
             match = true;
         }
 
@@ -500,7 +483,7 @@ public class FinancialTracker {
         try {
             return LocalDate.parse(input, DATE_FMT);
         } catch (DateTimeException e) {
-            System.out.println("Invalid Date Format: " + input);
+            System.out.println(RED + "Invalid Date Format: " + input + RESET);
 
             return null;
         }
@@ -512,7 +495,7 @@ public class FinancialTracker {
         try {
             return Double.parseDouble(input);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number: " + input);
+            System.out.println(RED + "Invalid number: " + input + RESET);
             return null;
         }
     }
